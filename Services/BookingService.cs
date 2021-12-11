@@ -35,7 +35,7 @@ namespace Services
                     return response;
                 }
 
-                var rental = await _rentalService.GetByRentalId(request.RentalId);
+                var rental = await _rentalService.GetByRentalId(request.RentalId); //ERROR HERE
 
                 if (rental == null)
                 {
@@ -51,9 +51,9 @@ namespace Services
 
                     foreach (var bookingItem in rental.BookingCollection)
                     {
-                        if ((bookingItem.Start <= request.StartDate.Date && bookingItem.Start.AddDays(bookingItem.Nights + rental.PreparationTimeInDays) > request.StartDate.Date)
-                            || (bookingItem.Start < request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays) && bookingItem.Start.AddDays(bookingItem.Nights + rental.PreparationTimeInDays) >= request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays))
-                            || (bookingItem.Start > request.StartDate && bookingItem.Start.AddDays(bookingItem.Nights + rental.PreparationTimeInDays) < request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays)))
+                        if ((bookingItem.StartDate <= request.StartDate.Date && bookingItem.StartDate.AddDays(bookingItem.NumberOfNights + rental.PreparationTimeInDays) > request.StartDate.Date)
+                            || (bookingItem.StartDate < request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays) && bookingItem.StartDate.AddDays(bookingItem.NumberOfNights + rental.PreparationTimeInDays) >= request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays))
+                            || (bookingItem.StartDate > request.StartDate && bookingItem.StartDate.AddDays(bookingItem.NumberOfNights + rental.PreparationTimeInDays) < request.StartDate.AddDays(request.NumberOfNigths + rental.PreparationTimeInDays)))
                         {
                             count++;
                         }
@@ -73,9 +73,10 @@ namespace Services
 
                 Booking booking = new Booking()
                 {
-                    Nights = request.NumberOfNigths,
-                    Start = request.StartDate.Date,
-                    RentalId = request.RentalId
+                    NumberOfNights = request.NumberOfNigths,
+                    StartDate = request.StartDate.Date,
+                    Rental = rental,
+                    RentalId = rental.Id
                 };
 
                 await _unitOfWork.BookingRepository.AddAsync(booking);
@@ -115,9 +116,9 @@ namespace Services
                 BookingViewModel bookingViewModel = new BookingViewModel
                 {
                     Id = booking.Id,
-                    Nights = booking.Nights,
-                    RentalId = booking.RentalId,
-                    Start = booking.Start
+                    Nights = booking.NumberOfNights,
+                    RentalId = booking.Rental.Id,
+                    Start = booking.StartDate
                 };
 
                 response.BookingViewModel = bookingViewModel;

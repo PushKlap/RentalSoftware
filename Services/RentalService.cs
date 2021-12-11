@@ -50,9 +50,10 @@ namespace Services
         {
             var rental = await _unitOfWork.RentalRepository.GetRentalById(rentalId);
 
-            var bookings = await _unitOfWork.BookingRepository.GetAll();
+            var bookings = await _unitOfWork.BookingRepository.GetAllAsync();
+            bookings = bookings.Where(x => x.Rental.Id == rental.Id).ToList();
 
-            rental.BookingCollection = bookings.Where(x => x.RentalId == rentalId).ToList();
+            rental.BookingCollection = bookings.Where(x => x.Rental.Id == rentalId).ToList(); //ERROR HERE
 
             return rental;
         }

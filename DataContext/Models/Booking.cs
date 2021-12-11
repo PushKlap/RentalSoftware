@@ -11,8 +11,9 @@ namespace DataContext.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public Rental Rental { get; set; }
         public int RentalId { get; set; }
-        public DateTime Start { get; set; }
-        public int Nights { get; set; }
+        public DateTime StartDate { get; set; }
+        public int NumberOfNights { get; set; }
     }
 }

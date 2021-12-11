@@ -70,22 +70,9 @@ namespace Services
                     var preparationDays = rental.PreparationTimeInDays;
 
                     var bookings = await _bookingService.GetAll();
-                    bookings = bookings.Where(x => x.RentalId == request.RentalId);
-
-                    List<BookingsAndRentals> BookingsAndRentals = new List<BookingsAndRentals>();
+                    bookings = bookings.Where(x => x.Rental.Id == request.RentalId);
 
                     foreach (var booking in bookings)
-                    {
-                        BookingsAndRentals.Add(new BookingsAndRentals()
-                        {
-                            Id = booking.Id,
-                            NumberOfNights = booking.Nights,
-                            StartDate = booking.Start,
-                            Rental = await _rentalService.GetByRentalId(request.RentalId),
-                        });
-                    }
-
-                    foreach (var booking in BookingsAndRentals)
                     {
 
                         if (calendarDateViewModel.Date >= booking.StartDate && calendarDateViewModel.Date < booking.StartDate.AddDays(booking.NumberOfNights))
