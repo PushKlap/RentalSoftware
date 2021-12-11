@@ -9,12 +9,5 @@ namespace DataContext.Repositories
     public class RentalRepository : RepositoryBase<Rental>, IRentalRepository
     {
         public RentalRepository(ApiContext context) : base(context) { }
-
-        public async Task<Rental> GetRentalById(int rentalId)
-        {
-            return await Context.Rentals
-                    .Where(x => x.Id == rentalId)
-                    .FirstOrDefaultAsync();
-        }
     }
 }

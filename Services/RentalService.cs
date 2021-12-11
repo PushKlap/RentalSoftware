@@ -48,7 +48,7 @@ namespace Services
 
         public async Task<Rental> GetByRentalId(int rentalId)
         {
-            var rental = await _unitOfWork.RentalRepository.GetRentalById(rentalId);
+            var rental = await _unitOfWork.RentalRepository.Get(rentalId);
 
             var bookings = await _unitOfWork.BookingRepository.GetAllAsync();
             bookings = bookings.Where(x => x.Rental.Id == rental.Id).ToList();
